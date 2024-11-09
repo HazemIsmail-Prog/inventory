@@ -1,6 +1,6 @@
 <x-slot name="header">
     <h2 class=" flex items-center justify-between font-semibold text-xl text-gray-800 leading-tight">
-        <div>{{ __('items') }}</div>
+        <div>{{ __('Items') }}</div>
         <div id="new"></div>
     </h2>
 </x-slot>
