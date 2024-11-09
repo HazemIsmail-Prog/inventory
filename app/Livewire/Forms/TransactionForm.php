@@ -22,7 +22,7 @@ class TransactionForm extends Form
         // Consolidate items by summing quantities for duplicates with the same item_id and expiration_date
         $transactionItemsData = collect($this->items)
             ->groupBy(function ($item) {
-                return $item['item_id'] . '-' . $item['expiration_date'];
+                return $item['expiration_date'] ? $item['item_id'] . '-' . $item['expiration_date'] : $item['item_id'];
             })
             ->map(function ($groupedItems) {
                 // Sum quantities for grouped items
