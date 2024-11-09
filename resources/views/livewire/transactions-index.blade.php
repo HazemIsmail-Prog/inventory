@@ -7,73 +7,72 @@
 
 <div class="py-12">
 
-    {{-- Table --}}
+    {{-- List --}}
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
-                <div x-data="{ showTranscationItems: null }" class="grid grid-cols-3 justify-start items-start gap-3">
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 justify-start items-start gap-3">
                     @forelse ($this->transactions as $transaction)
-                        <div class="flex flex-col items-center border rounded-lg p-3 shadow-md"
-                            x-on:mouseenter="showTranscationItems = {{ $transaction->id }}"
-                            x-on:mouseleave="showTranscationItems = null">
-                            <div class="flex w-full items-center gap-3">
-                                <div class="flex flex-col flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <div>{{ $transaction->created_at->format('d-m-Y') }}</div>
-                                        <div>{{ ucfirst($transaction->transaction_type) }}</div>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            {{ $transaction->source_warehouse_id ? $transaction->sourceWarehouse->name : ($transaction->invoice_id ? $transaction->invoice->supplier->name : '-') }}
-                                        </div>
-                                        <div>{{ $transaction->destinationWarehouse->name ?? '-' }}</div>
-                                    </div>
-                                    <div class="text-xs">{{ $transaction->notes }}</div>
+                        <x-collapsable-card>
+
+                            <div class="flex w-full h-full items-center justify-between px-4 gap-4">
+                                <div class="grid grid-cols-2">
+                                    <div>Date</div>
+                                    <div class="">{{ $transaction->created_at->format('d-m-Y') }}</div>
+                                    <div>From</div>
+                                    <div class=" font-extrabold text-red-500">{{ $transaction->source_warehouse_id ? $transaction->sourceWarehouse->name : ($transaction->invoice_id ? $transaction->invoice->supplier->name : '-') }}</div>
+                                    <div>To</div>
+                                    <div class=" font-extrabold text-green-500">{{ $transaction->destinationWarehouse->name ?? '-' }}</div>
+                                    <div class=" col-span-full text-xs">{{ $transaction->notes }}</div>
                                 </div>
-                                <div class="border-s-2 ps-3 text-center">
-                                    @if (!$transaction->invoice_id)
-                                        <button class="text-red-500"
-                                            wire:confirm="Are you sure you want to delete this transaction?"
-                                            wire:click="deleteTransaction({{ $transaction->id }})">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-5">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                            </svg>
-                                        </button>
-                                    @endif
-                                    <div class=" cursor-pointer select-none"
-                                        x-on:click="showTranscationItems != {{ $transaction->id }} ? showTranscationItems = {{ $transaction->id }} : showTranscationItems = null">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="size-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        </svg>
-                                    </div>
-                                </div>
+
+                                <div class="flex-1"></div>
+
+                                <button x-show="show" x-transition x-cloak type="button"
+                                    x-on:click.prevent="openModal({{ $transaction }})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                    </svg>
+
+                                </button>
+
+                                <button x-show="show" x-transition x-cloak class="text-red-500"
+                                    wire:confirm="Are you sure you want to delete this transaction?"
+                                    wire:click="delete({{ $transaction->id }})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                    </svg>
+                                </button>
+
                             </div>
 
-                            <div x-cloak x-show="showTranscationItems === {{ $transaction->id }}" x-transition
-                                class="mt-3 w-full border-t-2 flex flex-col divide-y">
-                                @foreach ($transaction->items as $item)
-                                    <div class="flex items-center justify-between py-3">
-                                        <div>
-                                            <div class="font-bold">{{ $item->name }}</div>
-                                            <div class="text-xs">{{ $item->pivot->expiration_date }}</div>
+                            <x-slot name="childList">
+                                <div class=" w-full flex flex-col divide-y bg-gray-100">
+                                    @foreach ($transaction->items as $item)
+                                        <div class="flex items-center justify-between py-2 px-4">
+                                            <div>
+                                                <div class="font-bold">{{ $item->name }}</div>
+                                                <div class="text-xs text-red-500">
+                                                    {{ $item->pivot->expiration_date ? $item->pivot->expiration_date : 'non expired' }}
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="font-bold text-green-500">{{ $item->pivot->quantity }}
+                                                </div>
+                                                <div class="text-xs">{{ $item->unit }}</div>
+                                            </div>
                                         </div>
-                                        <div class="text-end">
-                                            <div class="font-bold">{{ $item->pivot->quantity }}</div>
-                                            <div class="text-xs">{{ $item->unit }}</div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
+                                    @endforeach
+                                </div>
+                            </x-slot>
+                        </x-collapsable-card>
                     @empty
-
-                            <h1 class=" col-span-full text-center font-bold text-xl">No Transactions yet</h1>
+                        <h1 class=" col-span-full text-center font-bold text-xl">No Transactions yet</h1>
                     @endforelse
                 </div>
 
@@ -164,38 +163,57 @@
                         </div>
                     </div>
 
-                    <!-- Display Form Items -->
+                    <!-- Form Items -->
                     <template x-if="!loading && form.items.length > 0">
-                        <div class="flex flex-col gap-3 flex-1 max-h-[24rem] overflow-y-auto">
-                            <template x-for="(item , index) in form.items" :key="index">
-                                <div class="w-full flex gap-3 border rounded-lg p-3 items-center">
-                                    <div class="w-1/3">
-                                        <div class="font-extrabold" x-text="item.name"></div>
-                                        <div class="text-xs font-extralight" x-text="item.expiration_date"></div>
-                                    </div>
-                                    <div class="flex items-center gap-1 flex-1">
-                                        <x-text-input class="w-full" x-model="item.quantity" required type="number"
-                                            step="0.01" x-bind:max="item.net_quantity"
-                                            x-bind:placeholder="form.transaction_type !== 'adjustment' ? item.net_quantity + ' ' + item
-                                                .unit +
-                                                ' Available' : 'Quantity'"
-                                            min="0" />
-                                        <x-text-input class="w-full" x-model="item.expiration_date"
-                                            x-bind:required="form.transaction_type == 'adjustment'"
-                                            x-bind:type="form.transaction_type == 'adjustment' ? 'date' : 'hidden'" />
-                                        <input type="hidden" x-model="item.item_id">
-                                    </div>
-                                    <button type="button" x-on:click="removeItem(index)" class=" text-red-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="size-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </template>
+                        <div class="w-full  max-h-[24rem] overflow-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="w-[200px]"></th>
+                                        <th class="w-[200px]">Expiration Date</th>
+                                        <th class="w-[50px]"></th>
+                                    </tr>
+                                </thead>
+                                <template x-for="(item , index) in form.items" :key="index">
+                                    <tr>
+                                        <td class="px-1">
+                                            <div class="font-extrabold" x-text="item.name"></div>
+                                            <input type="hidden" x-model="item.item_id">
+                                        </td>
+                                        <td class="px-1">
+                                            <x-text-input class="w-full py-1" x-model="item.quantity" required
+                                                type="number" step="0.01" x-bind:max="item.net_quantity"
+                                                x-bind:placeholder="form.transaction_type !== 'adjustment' ? item.net_quantity + ' ' + item
+                                                    .unit +
+                                                    ' Available' : 'Quantity'"
+                                                min="0" />
+                                        </td>
+                                        <td class="px-1 text-center">
+                                            <x-text-input class="w-full py-1" x-model="item.expiration_date"
+                                                x-show="form.transaction_type == 'adjustment'"
+                                                x-bind:disabled="form.transaction_type != 'adjustment'"
+                                                type="date" />
+                                            <span x-show="form.transaction_type != 'adjustment'"
+                                                x-text="item.expiration_date ? item.expiration_date : '-'"></span>
+                                        </td>
+                                        <td class="px-1 text-center">
+                                            <div class=" cursor-pointer select-none text-red-500" tabindex="-1"
+                                                x-on:click="removeItem(index)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="size-5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </table>
                         </div>
                     </template>
+
                 </div>
 
                 <template x-if="isFormReadyToSubmit">
@@ -205,6 +223,7 @@
 
                 {{-- Footer Buttons --}}
                 <div class="mt-6 flex justify-end">
+
                     <x-secondary-button x-on:click="closeModal">
                         {{ __('Cancel') }}
                     </x-secondary-button>
@@ -213,7 +232,11 @@
 
                         <x-primary-button x-bind:disabled="submitting" class="ms-3">
                             <span x-show="!submitting">{{ __('Save') }}</span>
-                            <span x-show="submitting" class="animate-spin">⏳</span> <!-- Loading indicator -->
+                            <span x-show="submitting" class="animate-spin">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                  </svg>
+                                  </span> <!-- Loading indicator -->
                         </x-primary-button>
 
                     </template>
@@ -276,7 +299,7 @@
                 }
 
                 // Check if any item's quantity is empty or zero
-                const hasEmptyQuantity = this.form.items.some(item => !item.quantity || !item.expiration_date);
+                const hasEmptyQuantity = this.form.items.some(item => !item.quantity);
                 if (hasEmptyQuantity) {
                     return false;
                 }
@@ -335,7 +358,7 @@
 
             closeModal() {
                 this.form.transaction_type = '';
-                this.resetForm();
+                // this.resetForm();
                 this.$dispatch('close-modal', 'form-modal'); // Dispatch the close event for the modal
             },
 

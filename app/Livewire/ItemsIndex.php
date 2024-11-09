@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ItemsIndex extends Component
 {
+
+    use WithPagination;
 
     public ItemForm $form;
 
@@ -25,7 +28,7 @@ class ItemsIndex extends Component
             ->withSum(['transactions as totalOutgoing' => function (Builder $q) {
                 $q->whereIn('transactions.transaction_type', ['write_off']);
             }], DB::raw('item_transaction.quantity'))
-            ->get();
+            ->paginate(9);
     }
 
     public function save()
