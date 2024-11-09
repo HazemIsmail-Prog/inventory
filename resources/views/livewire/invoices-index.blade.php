@@ -64,7 +64,7 @@
                                             <div>
                                                 <div class="font-bold">{{ $item->name }}</div>
                                                 <div class="text-xs text-red-500">
-                                                    {{ $item->pivot->expiration_date ? $item->pivot->expiration_date : 'non expired' }}
+                                                    {{ $item->pivot->expiration_date ? \Carbon\Carbon::parse($item->pivot->expiration_date)->format('d-m-Y') : 'non expired' }}
                                                 </div>
                                                 <div class=" text-xs font-extralight">
                                                     {{ number_format($item->pivot->price_per_unit, 3) }} KWD</div>
