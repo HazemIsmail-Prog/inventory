@@ -34,7 +34,7 @@ class TransactionsIndex extends Component
         $this->form->save();
     }
 
-    public function deleteTransaction(Transaction $transaction)
+    public function delete(Transaction $transaction)
     {
         $transaction->delete();
     }
