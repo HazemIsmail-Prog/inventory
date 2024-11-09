@@ -429,7 +429,8 @@
                 if (index !== -1) {
                     this.form.items.push({
                         ...item,
-                        quantity: ''
+                        quantity: '',
+                        expiration_date: '',
                     });
 
                     // Remove the selected item from availableItems if the type is not 'adjustment'
