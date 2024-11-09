@@ -64,7 +64,7 @@
 
                         </x-collapsable-card>
                     @empty
-                        <h1 class=" col-span-full text-center font-bold text-xl">No Suppliers Yet</h1>
+                        <h1 class=" col-span-full text-center font-bold text-xl">No Suppliers Found</h1>
                     @endforelse
                 </div>
             </div>

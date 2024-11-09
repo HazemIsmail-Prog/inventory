@@ -73,7 +73,7 @@
                             </x-slot>
                         </x-collapsable-card>
                     @empty
-                        <h1 class=" col-span-full text-center font-bold text-xl">No Transactions yet</h1>
+                        <h1 class=" col-span-full text-center font-bold text-xl">No Transactions Found</h1>
                     @endforelse
                 </div>
 

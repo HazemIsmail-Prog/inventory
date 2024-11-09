@@ -56,7 +56,7 @@
 
                         </x-collapsable-card>
                     @empty
-                        <h1 class=" col-span-full text-center font-bold text-xl">No items Yet</h1>
+                        <h1 class=" col-span-full text-center font-bold text-xl">No items Found</h1>
                     @endforelse
                 </div>
             </div>

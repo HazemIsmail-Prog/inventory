@@ -6596,7 +6596,7 @@
                     "role": "Lead Developer"
                 }
             ],
-            "description": "Mockery is a simple yet flexible PHP mock object framework",
+            "description": "Mockery is a simple Found flexible PHP mock object framework",
             "homepage": "https://github.com/mockery/mockery",
             "keywords": [
                 "BDD",

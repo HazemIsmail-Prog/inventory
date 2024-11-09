@@ -80,7 +80,7 @@
 
                     @empty
 
-                        <h1 class=" col-span-full text-center font-bold text-xl">No Warehouses Yet</h1>
+                        <h1 class=" col-span-full text-center font-bold text-xl">No Warehouses Found</h1>
                     @endforelse
                 </div>
             </div>
