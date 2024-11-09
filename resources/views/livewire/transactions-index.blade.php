@@ -94,7 +94,7 @@
             <form x-on:submit.prevent="submit" class="p-6 flex flex-col gap-3">
 
                 <!-- Transaction Type Selection (Buttons) -->
-                <div class="w-full flex items-center justify-around gap-3">
+                <div class="w-full flex flex-col md:flex-row items-center justify-around gap-3">
                     <template x-for="row in transaction_types" :key="row.type">
                         <div>
                             <x-primary-button x-show="form.transaction_type === row.type" type="button">
@@ -111,7 +111,7 @@
                 <input type="hidden" name="transaction_type" x-model="form.transaction_type">
 
                 {{-- Warehouses --}}
-                <div class="flex w-full gap-3">
+                <div class="flex flex-col md:flex-row w-full gap-3">
                     <!-- Source Warehouse Selection -->
                     <div class="w-full" x-show="isSourceVisible" style="display: none;">
                         <label class="block" for="source_warehouse_id">Source Warehouse:</label>
@@ -137,9 +137,9 @@
                     </div>
                 </div>
 
-                <div class=" flex gap-3" x-show="isItemsVisible">
+                <div class=" flex flex-col md:flex-row gap-3" x-show="isItemsVisible">
                     <!-- Display Available Items -->
-                    <div class="p-3 border rounded-md flex flex-col gap-3 w-1/3 h-96">
+                    <div class="p-3 border rounded-md flex flex-col gap-3 w-full md:w-1/3 h-96">
                         <p>Available Items</p>
                         <x-text-input class="w-full" x-model="itemsSearch" type="text" placeholder="Search..." />
                         <p x-show="loading" style="display: none;">Loading items...</p>
@@ -171,14 +171,14 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th class="w-[200px]"></th>
-                                        <th class="w-[200px]">Expiration Date</th>
-                                        <th class="w-[50px]"></th>
+                                        <th class="w-[200px] min-w-[200px]"></th>
+                                        <th class="w-[200px] min-w-[200px]">Expiration Date</th>
+                                        <th class="w-[50px] min-w-[50px]"></th>
                                     </tr>
                                 </thead>
                                 <template x-for="(item , index) in form.items" :key="index">
                                     <tr>
-                                        <td class="px-1">
+                                        <td class="px-3">
                                             <div class="font-extrabold" x-text="item.name"></div>
                                             <input type="hidden" x-model="item.item_id">
                                         </td>
