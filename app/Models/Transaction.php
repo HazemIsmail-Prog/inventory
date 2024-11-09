@@ -28,8 +28,8 @@ class Transaction extends Model
     
     public function invoice(): BelongsTo
     {
-        
-        return $this->belongsTo(invoice::class);
+
+        return $this->belongsTo(Invoice::class);
     }
 
     public function items(): BelongsToMany
