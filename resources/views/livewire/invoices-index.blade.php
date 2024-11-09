@@ -7,7 +7,7 @@
 
 <div class="py-12">
 
-    {{-- Table --}}
+    {{-- List --}}
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
@@ -103,58 +103,44 @@
         <x-modal maxWidth="7xl" name="form-modal">
             <form x-on:submit.prevent="submit" class="p-6 flex flex-col gap-3">
 
-                <div class="flex w-full gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+
                     <div class="w-full">
-                        <label class="block" for="supplier_id">Invoice Number</label>
-                        <x-text-input class="w-full" x-model="form.invoice_number" type="text" />
-                    </div>
-                    <div class="w-full">
-                        <label class="block" for="supplier_id">Date</label>
-                        <x-text-input class="w-full" x-model="form.invoice_date" type="date" />
+                        <label class="block" for="invoice_date">Date</label>
+                        <x-text-input required class="w-full" id="invoice_date" x-model="form.invoice_date"
+                            type="date" />
                     </div>
 
-                </div>
+                    <x-text-input placeholder="Invoice Number" class="w-full" x-model="form.invoice_number"
+                        type="text" />
 
-                <div class="flex w-full gap-3">
+
                     <!-- Suuplier Selection -->
-                    <div class="w-full">
-                        <label class="block" for="supplier_id">Supplier:</label>
-                        <x-select required class="w-full" name="supplier_id" id="supplier_id"
-                            x-model="form.supplier_id">
-                            <option value="">---</option>
-                            <template x-for="supplier in suppliers" :key="supplier.id">
-                                <option :value="supplier.id" x-text="supplier.name"></option>
-                            </template>
-                        </x-select>
-                    </div>
-
-
-
+                    <x-select required class="w-full" name="supplier_id" id="supplier_id" x-model="form.supplier_id">
+                        <option value="">Select Supplier</option>
+                        <template x-for="supplier in suppliers" :key="supplier.id">
+                            <option :value="supplier.id" x-text="supplier.name"></option>
+                        </template>
+                    </x-select>
 
                     <!-- Warehouse Selection -->
-                    <div class="w-full">
-                        <label class="block" for="warehouse_id">Warehouse:</label>
-                        <x-select required class="w-full" name="warehouse_id" id="warehouse_id"
-                            x-model="form.warehouse_id">
-                            <option value="">---</option>
-                            <template x-for="warehouse in warehouses" :key="warehouse.id">
-                                <option :value="warehouse.id" x-text="warehouse.name"></option>
-                            </template>
-                        </x-select>
-                    </div>
+                    <x-select required class="w-full" name="warehouse_id" id="warehouse_id" x-model="form.warehouse_id">
+                        <option value="">Select Warehouse</option>
+                        <template x-for="warehouse in warehouses" :key="warehouse.id">
+                            <option :value="warehouse.id" x-text="warehouse.name"></option>
+                        </template>
+                    </x-select>
 
+                    <textarea class="border-gray-300 col-span-full focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        placeholder="Notes..." x-model="form.notes" rows="2"></textarea>
                 </div>
 
-                <textarea class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                    placeholder="Notes..." x-model="form.notes" rows="2"></textarea>
 
-                <div class="text-right font-bold text-lg">
-                    Total: <span x-text="formatNumber(grandTotal)"></span>
-                </div>
 
-                <div class=" flex gap-3">
+
+                <div class=" flex flex-col md:flex-row gap-3">
                     <!-- Items -->
-                    <div class="p-3 border rounded-md flex flex-col gap-3 w-1/3 h-96">
+                    <div class="p-3 border rounded-md flex flex-col gap-3 w-full md:w-1/3 h-96">
                         <p>Items</p>
                         <x-text-input class="w-full" x-model="itemsSearch" type="text" placeholder="Search..." />
                         <div class="flex flex-col gap-3 flex-1 overflow-y-auto">
@@ -174,8 +160,17 @@
 
                     <!-- Form Items -->
                     <template x-if="form.items.length > 0">
-                        <div class="w-full  h-96 overflow-auto">
+                        <div class="w-full max-h-[24rem] overflow-auto">
                             <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="w-[200px] min-w-[200px]"></th>
+                                        <th class="w-[200px] min-w-[200px]"></th>
+                                        <th class="w-[200px] min-w-[200px]">Expiration Date</th>
+                                        <th class="w-[50px] min-w-[50px]"></th>
+                                    </tr>
+                                </thead>
                                 <template x-for="(item , index) in form.items" :key="index">
                                     <tr>
                                         <td class="px-1">
@@ -217,6 +212,10 @@
                     </template>
                 </div>
 
+                <div class="text-right font-bold text-lg">
+                    Total: <span x-text="formatNumber(grandTotal)"></span>
+                </div>
+
 
                 {{-- Footer Buttons --}}
                 <div class="mt-6 flex justify-end">
@@ -229,10 +228,12 @@
                         <x-primary-button x-bind:disabled="submitting" class="ms-3">
                             <span x-show="!submitting">{{ __('Save') }}</span>
                             <span x-show="submitting" class="animate-spin">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                  </svg>
-                                  
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                </svg>
+
                             </span>
                         </x-primary-button>
 
