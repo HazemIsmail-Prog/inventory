@@ -58,7 +58,8 @@
                                             <div>
                                                 <div class="font-bold">{{ $item->name }}</div>
                                                 <div class="text-xs text-red-500">
-                                                    {{ $item->pivot->expiration_date ? $item->pivot->expiration_date : 'non expired' }}
+                                                    {{ $item->pivot->expiration_date ? \Carbon\Carbon::parse($item->pivot->expiration_date)->format('d-m-Y') : 'non expired' }}
+
                                                 </div>
                                             </div>
                                             <div class="text-end">

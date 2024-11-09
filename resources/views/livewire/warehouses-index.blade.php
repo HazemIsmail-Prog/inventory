@@ -25,7 +25,7 @@
 
 
                                 <div class=" select-none flex-1">{{ $warehouse->name }}</div>
-                                
+
                                 <div class="flex-1"></div>
 
 
@@ -59,7 +59,10 @@
                                         <div class="flex items-center justify-between py-2 px-4">
                                             <div>
                                                 <div class="font-bold">{{ $item->name }}</div>
-                                                <div class="text-xs text-red-500">{{ $item->expiration_date }}</div>
+                                                <div class="text-xs text-red-500">
+                                                    {{ $item->expiration_date ? \Carbon\Carbon::parse($item->expiration_date)->format('d-m-Y') : 'non expired' }}
+
+                                                </div>
                                             </div>
                                             <div class="text-end">
                                                 <div class="font-bold text-green-500">{{ $item->net_quantity }}</div>
