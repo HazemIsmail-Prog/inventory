@@ -430,9 +430,9 @@
                     this.form.items.push({
                         ...item,
                         quantity: '',
-                        expiration_date: '',
+                        expiration_date: item.expiration_date ? item.expiration_date : null,
                     });
-
+                    
                     // Remove the selected item from availableItems if the type is not 'adjustment'
                     if (this.form.transaction_type !== 'adjustment') {
                         this.availableItems.splice(index, 1);
